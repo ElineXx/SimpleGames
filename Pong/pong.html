@@ -1,0 +1,125 @@
+<html>
+<body style="overflow: hidden;">
+    <div class="index" style=" 
+    display: inline-block;
+    z-index: 10;
+    position: fixed;
+    font-size: 1.2em;
+    font-family: Arial, Helvetica, sans-serif;">Control: Mouse</div>
+    <div style="margin: 0 18%;">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <script>
+            let canvas;
+            let canvasContext;
+            let ballX = 400;
+            let ballY = 300;
+            let ballspeedX = -15;
+            let ballspeedY = 5;
+            let paddle1Y = 250;
+            let paddle2Y = 250;
+            let player1Score = 0;
+            let player2Score = 0;
+
+            let calculateMousePos = (evt) => {
+                let rect = canvas.getBoundingClientRect();
+                let root = document.documentElement;
+                let mouseX = evt.clientX - rect.left - root.scrollLeft;
+                let mouseY = evt.clientY - rect.top - root.scrollTop;
+                return {
+                    x: mouseX,
+                    y: mouseY
+                }
+            }
+
+            window.onload = () => {
+                canvas = document.getElementById('gameCanvas');
+                canvasContext = canvas.getContext('2d');
+
+                let framesPerSecond = 30;
+                setInterval(function() {
+                    computerMovement();
+                    moveEverything();
+                    drawEverything();
+                }, 1000/framesPerSecond);
+
+                canvas.addEventListener('mousemove', (evt) => {
+                    let mousePos = calculateMousePos(evt);
+                    paddle1Y = mousePos.y - 50;
+                });
+            }
+            
+            let computerMovement = () => {
+                if(paddle2Y + 30 < ballY) {
+                    paddle2Y = paddle2Y + 10;
+                }
+                if(paddle2Y + 70 > ballY) {
+                    paddle2Y = paddle2Y - 10;
+                }
+            }
+
+            let moveEverything = () => {
+                ballX = ballX + ballspeedX;
+                ballY = ballY + ballspeedY;
+                if(ballX < 10) {
+                    if(ballY > paddle1Y && ballY < paddle1Y + 100) {
+                        ballspeedX = -ballspeedX;
+                        let deltaY = ballY - (paddle1Y + 50);
+                        ballspeedY = ballspeedY + deltaY * 0.10;
+                    } else {
+                        ballReset();
+                        player2Score++;
+                    }
+                }
+                if(ballX > canvas.width - 10) {
+                    if(ballY > paddle2Y && ballY < paddle2Y + 100) {
+                        ballspeedX = -ballspeedX;
+                        let deltaY = ballY - (paddle2Y + 50);
+                        ballspeedY = ballspeedY + deltaY * 0.10;
+                    } else {
+                        ballReset();
+                        player1Score++;
+                    }
+                }
+                if(ballY > canvas.height - 10 || ballY < 10) {
+                    ballspeedY = -ballspeedY;
+                }
+            }
+
+            let drawNet = () => {
+                for(let i = 0; i < canvas.height; i += 40) {
+                    colorRect(canvas.width/2-1, i, 2, 20, 'white');
+                }
+            }
+
+            let drawEverything = () => {
+                colorRect(0, 0, canvas.width, canvas.height, 'black');
+                drawNet();
+                colorRect(0, paddle1Y, 10, 100, 'white');
+                colorRect(790, paddle2Y, 10, 100, 'white');
+                colorCircle(ballX, ballY, 10, 'white');
+                canvasContext.fillText(player1Score , 200, 100);
+                canvasContext.fillText(player2Score, canvas.width - 200, 100);
+            }
+
+            let colorRect = (leftX, topY, width, height, drawColor) => {
+                canvasContext.fillStyle = drawColor;
+                canvasContext.fillRect(leftX, topY, width, height);
+            }
+
+            let colorCircle = (centerX, centerY, radius, drawColor) => {
+                canvasContext.fillStyle = drawColor;
+                canvasContext.beginPath();
+                canvasContext.arc(centerX, centerY, radius, 0, Math.PI*2, true);
+                canvasContext.fill();
+            }
+
+            let ballReset = () => {
+                ballX = canvas.width/2;
+                ballY = canvas.height/2;
+                ballspeedX = -ballspeedX;
+                ballspeedY = 5;
+            }
+        </script>
+    </div>
+</body>
+</html> 
