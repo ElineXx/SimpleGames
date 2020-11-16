@@ -1,0 +1,28 @@
+body {
+font-family: Helvetica, Arial, sans-serif;
+background: #16BFFD;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #CB3066, #16BFFD);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #CB3066, #16BFFD); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.container{
+margin: 6%;
+text-align: center;
+}
+
+h1 {
+    font-size: 3.5em;
+    color:black;
+    margin-bottom: 6%;
+}
+
+a {
+    font-size: 1.5em;
+    color: black;
+    display: block;
+    margin: auto;
+    text-decoration: none;
+    border: 3px black solid;
+    width: 20%;
+    margin-top: 2%;
+}
